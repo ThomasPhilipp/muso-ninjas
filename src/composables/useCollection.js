@@ -1,9 +1,10 @@
 import { ref } from 'vue'
 import { projectFirestore } from '../firebase/config'
 
+/* CRUD methods for a certain collection */
 const useCollection = (collection) => {
 
-  const error = ref(null)
+  const error = ref(null) // no global error as we can have multiple instances of this composable
 
   // add a new document
   const addDoc = async (doc) => {
