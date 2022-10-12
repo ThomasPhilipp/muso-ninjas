@@ -16,36 +16,41 @@
   
   <script>
   import { ref } from 'vue'
+  import useStorage from '@/composables/useStorage'
   
   export default {
     setup() {
+      const { filePath, url, uploadImage } = useStorage()
+  
       const title = ref('')
       const description = ref('')
       const file = ref(null)
       const fileError = ref(null)
-
-      const types = ['image/png', 'image/jpeg']
-      
-      const handleSubmit = () => {
+  
+      const handleSubmit = async () => {
         if (file.value) {
-            console.log(title.value, description.value, file.value)
+          await uploadImage(file.value)
+          console.log('image uploaded, url: ', url.value)
         }
       }
-
+  
+      // allowed file types
+      const types = ['image/png', 'image/jpeg']
+  
       const handleChange = (e) => {
-        const selected = e.target.files[0]
+        let selected = e.target.files[0]
         console.log(selected)
-
+  
         if (selected && types.includes(selected.type)) {
-            file.value = selected
-            fileError.value = null
+          file.value = selected
+          fileError.value = null
         } else {
-            file.value = null
-            fileError.value = 'Please select an image file (png or jpeg)'
+          file.value = null
+          fileError.value = 'Please select an image file (png or jpg)'
         }
       }
       
-      return { title, description, fileError, handleSubmit, handleChange }
+      return { title, description, handleSubmit, fileError, handleChange }
     }
   }
   </script>
