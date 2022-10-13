@@ -5,11 +5,24 @@ import LoginView from '../views/auth/LoginView.vue'
 import SignupView from '../views/auth/SignupView.vue'
 import CreatePlaylist from '../views/playlists/CreatePlaylist.vue'
 
+import { projectAuth } from '@/firebase/config'
+
+const requireAuth = (to, from, next) => {
+  let user = projectAuth.currentUser
+
+  if (!user) {
+    next({ name: 'Login' })
+  } else {
+    next()
+  }
+}
+
 const routes = [
   {
     path: '/',
     name: 'Home',
-    component: HomeView
+    component: HomeView,
+    beforeEnter: requireAuth
   },
   {
     path: '/login',
@@ -24,7 +37,8 @@ const routes = [
   {
     path: '/playlists/create',
     name: 'CreatePlaylist',
-    component: CreatePlaylist
+    component: CreatePlaylist,
+    beforeEnter: requireAuth
   }
 ]
 
